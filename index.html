@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Beautiful weather forecast app with real-time conditions, 7-day forecast, and dynamic weather animations.">
+    <title>Aether Weather — Live Forecast</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-gradient" id="bgGradient"></div>
+    <div class="weather-particles" id="weatherParticles"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header" id="appHeader">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="6" fill="currentColor" opacity="0.9"/>
+                    <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="16" y1="26" x2="16" y2="30"/>
+                        <line x1="2" y1="16" x2="6" y2="16"/>
+                        <line x1="26" y1="16" x2="30" y2="16"/>
+                        <line x1="6.1" y1="6.1" x2="8.9" y2="8.9"/>
+                        <line x1="23.1" y1="23.1" x2="25.9" y2="25.9"/>
+                        <line x1="6.1" y1="25.9" x2="8.9" y2="23.1"/>
+                        <line x1="23.1" y1="8.9" x2="25.9" y2="6.1"/>
+                    </g>
+                </svg>
+                <span class="logo-text">Aether</span>
+            </div>
+            <div class="search-container" id="searchContainer">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search city..." autocomplete="off">
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+            <button class="location-btn" id="locationBtn" title="Use my location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Loading State -->
+            <div class="loading-screen" id="loadingScreen">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Fetching weather data...</p>
+            </div>
+
+            <!-- Welcome State -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon">
+                    <svg viewBox="0 0 80 80" fill="none">
+                        <circle cx="35" cy="35" r="12" fill="hsl(45, 100%, 65%)" opacity="0.9"/>
+                        <g stroke="hsl(45, 100%, 65%)" stroke-width="2.5" stroke-linecap="round" opacity="0.7">
+                            <line x1="35" y1="15" x2="35" y2="20"/>
+                            <line x1="35" y1="50" x2="35" y2="55"/>
+                            <line x1="15" y1="35" x2="20" y2="35"/>
+                            <line x1="50" y1="35" x2="55" y2="35"/>
+                        </g>
+                        <path d="M50 50 C50 40, 58 36, 65 40 C68 30, 82 30, 80 42 C88 42, 88 56, 78 56 L50 56 C44 56, 42 50, 50 50Z" fill="hsl(220, 60%, 80%)" opacity="0.8"/>
+                    </svg>
+                </div>
+                <h1 class="welcome-title">Welcome to Aether</h1>
+                <p class="welcome-subtitle">Search for a city or use your location to get started</p>
+                <button class="welcome-btn" id="welcomeLocationBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    Use My Location
+                </button>
+            </div>
+
+            <!-- Weather Dashboard (hidden initially) -->
+            <div class="weather-dashboard hidden" id="weatherDashboard">
+                <!-- Hero Card -->
+                <section class="hero-card" id="heroCard">
+                    <div class="hero-left">
+                        <div class="hero-location">
+                            <svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <h1 id="cityName">—</h1>
+                        </div>
+                        <p class="hero-date" id="currentDate"></p>
+                        <p class="hero-condition" id="currentCondition">—</p>
+                    </div>
+                    <div class="hero-center">
+                        <div class="hero-temp-wrapper">
+                            <span class="hero-temp" id="currentTemp">—</span>
+                            <span class="hero-deg">°C</span>
+                        </div>
+                        <div class="hero-feels">
+                            Feels like <span id="feelsLike">—</span>°
+                        </div>
+                    </div>
+                    <div class="hero-right">
+                        <div class="hero-weather-icon" id="heroWeatherIcon"></div>
+                    </div>
+                </section>
+
+                <!-- Stats Row -->
+                <section class="stats-row">
+                    <div class="stat-card" id="statWind">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="windSpeed">—</span>
+                            <span class="stat-label">Wind Speed</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="statHumidity">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="humidity">—</span>
+                            <span class="stat-label">Humidity</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="statUV">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="uvIndex">—</span>
+                            <span class="stat-label">UV Index</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="statVisibility">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="visibility">—</span>
+                            <span class="stat-label">Visibility</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="statPressure">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="pressure">—</span>
+                            <span class="stat-label">Pressure</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="statDewpoint">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="dewpoint">—</span>
+                            <span class="stat-label">Dew Point</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Hourly Forecast -->
+                <section class="hourly-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Hourly Forecast
+                    </h2>
+                    <div class="hourly-scroll" id="hourlyScroll">
+                        <!-- Filled by JS -->
+                    </div>
+                </section>
+
+                <!-- 7-Day Forecast -->
+                <section class="daily-section">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        7-Day Forecast
+                    </h2>
+                    <div class="daily-list" id="dailyList">
+                        <!-- Filled by JS -->
+                    </div>
+                </section>
+
+                <!-- Sun & Moon -->
+                <section class="sun-moon-section">
+                    <div class="sun-card glass-card">
+                        <h3 class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/>
+                                <line x1="12" y1="21" x2="12" y2="23"/>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                <line x1="1" y1="12" x2="3" y2="12"/>
+                                <line x1="21" y1="12" x2="23" y2="12"/>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                            </svg>
+                            Sunrise & Sunset
+                        </h3>
+                        <div class="sun-arc-container">
+                            <svg class="sun-arc-svg" viewBox="0 0 300 160">
+                                <defs>
+                                    <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:hsl(30, 100%, 60%);stop-opacity:0.3"/>
+                                        <stop offset="50%" style="stop-color:hsl(45, 100%, 65%);stop-opacity:0.8"/>
+                                        <stop offset="100%" style="stop-color:hsl(220, 60%, 50%);stop-opacity:0.3"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 30 140 Q 150 -20 270 140" stroke="url(#arcGrad)" stroke-width="3" fill="none" stroke-dasharray="6 4" opacity="0.5"/>
+                                <path id="sunArcPath" d="M 30 140 Q 150 -20 270 140" stroke="url(#arcGrad)" stroke-width="3" fill="none"/>
+                                <circle id="sunDot" cx="150" cy="20" r="8" fill="hsl(45, 100%, 65%)">
+                                    <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+                                </circle>
+                            </svg>
+                            <div class="sun-times">
+                                <div class="sun-time">
+                                    <span class="sun-time-label">Sunrise</span>
+                                    <span class="sun-time-value" id="sunrise">—</span>
+                                </div>
+                                <div class="sun-time">
+                                    <span class="sun-time-label">Sunset</span>
+                                    <span class="sun-time-value" id="sunset">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
