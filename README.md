@@ -341,17 +341,7 @@ This project is licensed under the **MIT License**.
 
 Feel free to use, modify, and distribute this project with proper attribution.
 
----
 
-# 👨‍💻 Author
-
-**Dushyant Saraswat**
-
-### Connect with Me
-
-- GitHub: https://github.com/yourusername
-- LinkedIn: https://linkedin.com/in/yourprofile
-- Portfolio: https://yourportfolio.com
 
 ---
 
